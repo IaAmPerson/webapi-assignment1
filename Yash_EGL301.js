@@ -1,123 +1,102 @@
-// Simulated database to store rooms and their songs
-let rooms = {};
+// Database array
+let rooms = [];
 
-// Adds a new playlist
+
+// Add new room type function
 function addRoomType(roomTypeName) {
-  if (rooms[roomTypeName]) {
-    return `Room type "${roomTypeName}" already exists`;
-  }
-  rooms[roomTypeName] = [];
-  console.log(`Playlist "${roomTypeName}" is created.`);
+    // Checking if room type already exists
+    let roomTypeExists = rooms.some(room => room.roomTypeName === roomTypeName);
+    if (!roomTypeExists) {
+        rooms.push({ roomTypeName, rooms: [] }); // Add new room type
+        console.log(`Room type '${roomTypeName}' added successfully.`);
+    } else {
+        console.log(`Room type '${roomTypeName}' already exists.`);
+    }
 }
 
-// Adds a new song to a specific playlist
-function addRoom(roomTypeName, roomNo, roomLevel) {
-  if (!rooms[roomTypeName]) {
-    return `Room type "${roomTypeName}" already exists`;
-  }
-  const roomType = rooms[roomTypeName];
-  const roomExists = rooms.some(song => song.title === title && song.artist === artist);
-  if (roomExists) {
-    return "Song already exists in the playlist";
-  }
-  const room = {
-    id: playlist.length + 1,
-    title: title,
-    artist: artist,
-    album: album
-  };
-  roomType.push(room);
-  console.log(`Room "${title}" on ${artist} is added to playlist "${playlistName}".`);
+// Function to remove an existing room type
+function removeRoomType(roomTypeName) {
+    // Filter out the room type from the array
+    rooms = rooms.filter(room => room.roomTypeName !== roomTypeName);
+    console.log(`Room type '${roomTypeName}' removed successfully.`);
 }
 
-// Searches for songs with a given term in a specific playlist
-function searchSongs(playlistName, search) {
-  if (!rooms[playlistName]) {
-    return `Playlist "${playlistName}" does not exist`;
-  }
-  const foundSongs = rooms[playlistName].filter(song =>
-    song.title.toLowerCase().includes(search.toLowerCase()) ||
-    song.artist.toLowerCase().includes(search.toLowerCase()) ||
-    song.album.toLowerCase().includes(search.toLowerCase())
-  );
-  return foundSongs.length > 0 ? foundSongs : `No songs found in playlist "${playlistName}" matching the search term`;
+// Function to add a room number to a specific room type
+function addRoomNumber(roomTypeName, roomNumber, level) {
+    let roomType = rooms.find(room => room.roomTypeName === roomTypeName);
+    if (roomType) {
+        // Add the room number with details
+        roomType.rooms.push({ roomNumber, level });
+        console.log(`Room number '${roomNumber}' added to room type '${roomTypeName}'.`);
+    } else {
+        console.log(`Room type '${roomTypeName}' not found.`);
+    }
 }
 
-// Gets the details of a song by its ID in a specific playlist
-function getSongDetails(playlistName, id) {
-  if (!rooms[playlistName]) {
-    return `Playlist "${playlistName}" does not exist`;
-  }
-  const song = rooms[playlistName].find(song => song.id === id);
-  return song || `Song with ID ${id} does not exist in playlist "${playlistName}"`;
+// Function to remove a room number from a room type
+function removeRoomNumber(roomTypeName, roomNumber) {
+    let roomType = rooms.find(room => room.roomTypeName === roomTypeName);
+    if (roomType) {
+        // Filter out the room number from the room type
+        roomType.rooms = roomType.rooms.filter(room => room.roomNumber !== roomNumber);
+        console.log(`Room number '${roomNumber}' removed from room type '${roomTypeName}'.`);
+    } else {
+        console.log(`Room type '${roomTypeName}' not found.`);
+    }
 }
 
-// Updates the details of a song in a specific playlist
-function updateSongDetails(playlistName, id, updatedDetails) {
-  if (!rooms[playlistName]) {
-    return `Playlist "${playlistName}" does not exist`;
-  }
-  const playlist = rooms[playlistName];
-  const song = playlist.find(song => song.id === id);
-  if (song) {
-    song.title = updatedDetails.title || song.title;
-    song.artist = updatedDetails.artist || song.artist;
-    song.album = updatedDetails.album || song.album;
-    return song;
-  }
-  return `Song with ID ${id} does not exist in playlist "${playlistName}"`;
+// Function to get the entire list of rooms
+function getAllRooms() {
+    return rooms;
 }
 
-// Deletes a song by its ID in a specific playlist
-function deleteSong(playlistName, id) {
-  if (!rooms[playlistName]) {
-    return `Playlist "${playlistName}" does not exist`;
-  }
-  const playlist = rooms[playlistName];
-  const songIndex = playlist.findIndex(song => song.id === id);
-  if (songIndex !== -1) {
-    const [deletedSong] = playlist.splice(songIndex, 1);
-    console.log(`Song "${deletedSong.title}" by ${deletedSong.artist} is deleted from playlist "${playlistName}".`);
-    return true;
-  }
-  return `Song with ID ${id} does not exist in playlist "${playlistName}"`;
+// Function to get all room numbers under a specific room type
+function getRoomsInType(roomTypeName) {
+    let roomType = rooms.find(room => room.roomTypeName === roomTypeName);
+    if (roomType) {
+        return roomType.rooms;
+    } else {
+        console.log(`Room type '${roomTypeName}' not found.`);
+        return [];
+    }
 }
 
-// Lists all songs in a specific playlist
-function listSongs(playlistName) {
-  if (!rooms[playlistName]) {
-    return `Playlist "${playlistName}" does not exist`;
-  }
-  return rooms[playlistName];
+// Function to search for a room by room number
+function searchRoom(roomNumber) {
+    for (let roomType of rooms) {
+        let room = roomType.rooms.find(r => r.roomNumber === roomNumber);
+        if (room) {
+            return { ...room, roomTypeName: roomType.roomTypeName };
+        }
+    }
+    console.log(`Room number '${roomNumber}' not found.`);
+    return null;
 }
 
-// Gets songs by a specific artist in a specific playlist
-function getSongsByArtist(playlistName, artist) {
-  if (!rooms[playlistName]) {
-    return `Playlist "${playlistName}" does not exist`;
-  }
-  const artistSongs = rooms[playlistName].filter(song => song.artist.toLowerCase() === artist.toLowerCase());
-  return artistSongs.length > 0 ? artistSongs : `No songs found for artist "${artist}" in playlist "${playlistName}"`;
+// Function to get room details by room number
+function getRoomDetails(roomNumber) {
+    return this.searchRoom(roomNumber);
 }
 
-// Deletes an entire playlist
-function deletePlaylist(playlistName) {
-  if (!rooms[playlistName]) {
-    return `Playlist "${playlistName}" does not exist`;
-  }
-  delete rooms[playlistName];
-  console.log(`Playlist "${playlistName}" is deleted.`);
+// Function to update room details
+function updateRoomDetails(roomNumber, newLevel) {
+    let room = this.searchRoom(roomNumber);
+    if (room) {
+        room.level = newLevel; // Update the level
+        console.log(`Room number '${roomNumber}' updated to level '${newLevel}'.`);
+    } else {
+        console.log(`Room number '${roomNumber}' not found for update.`);
+    }
 }
 
-// Exporting the functions as a module
 module.exports = {
-  addPlaylist,
-  addSong,
-  searchSongs,
-  getSongDetails,
-  updateSongDetails,
-  deleteSong,
-  listSongs,
-  getSongsByArtist,
-  deletePlaylist
+    addRoomType,
+    removeRoomType,
+    addRoomNumber,
+    removeRoomNumber,
+    getAllRooms,
+    getRoomsInType,
+    searchRoom,
+    getRoomDetails,
+    updateRoomDetails
 };
