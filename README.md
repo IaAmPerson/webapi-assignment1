@@ -65,7 +65,7 @@
     console.log("Updated room details for room 201: ", hotelRoomApp.getRoomDetails(201));
 
     console.log("");
-    ```
+        ```
 
 
 ## How to run the code
