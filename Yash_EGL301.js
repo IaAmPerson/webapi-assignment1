@@ -7,7 +7,7 @@ function addRoomType(roomTypeName) {
     //Check if room type already exists
     let roomTypeExists = rooms.some(room => room.roomTypeName === roomTypeName);
     if (!roomTypeExists) {
-        rooms.push({ roomTypeName, rooms: [] }); // Add new room type
+        rooms.push({ roomTypeName, rooms: [] }); //Add new room type
         console.log(`Room type '${roomTypeName}' added successfully.`);
     } else {
         console.log(`Room type '${roomTypeName}' already exists.`);
