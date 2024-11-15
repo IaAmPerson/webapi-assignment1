@@ -95,4 +95,4 @@ To run the module, open a new terminal and enter the following command: ```node 
 
 
 # References
-I had ChatGPT's help for the search function. I told ChatGPT not to give me all the code.
+I had ChatGPT make my code more readable. I had it guide me through the search function.
